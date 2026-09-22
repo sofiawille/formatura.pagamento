@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Formatura DSC 2026 · Viagem Vale das Pedras</title>
+<meta name="description" content="Painel transparente da viagem de formatura do 9º ano da Deutsche Schule Curitiba: contratos, pagamentos, o que falta e o que vai sobrar.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+<script>
+/* =====================================================================
+   CONFIGURAÇÃO · edite só aqui
+   ---------------------------------------------------------------------
+   1) Planilha Google (fonte oficial dos dados).
+      Publique cada aba como CSV (Arquivo > Compartilhar > Publicar na web)
+      e cole os links abaixo. Enquanto os links estiverem vazios, o site usa
+      os DADOS_LOCAIS logo abaixo.
+   ===================================================================== */
+const PLANILHA = {
+  caixa:  "",   // link CSV da aba "Caixa"
+  alunos: ""    // link CSV da aba "Alunos"
+};
+
+/* 2) Dados locais (reserva). Mesmo formato da planilha. */
+const DADOS_LOCAIS = {
+  caixa: {
+    saldo_conta: 31188,
+    saldo_atualizado_em: "31/08/2026",
+    hotel_total: 47118,
+    hotel_pago: 13546,
+    hotel_vencimento: "16/10/2026",
+    onibus_total: 3900,
+    onibus_pago: 1170,
+    onibus_vencimento: "09/11/2026",
+    meta_festa: 3000,
+    chave_pix: "formaturadsc.26@gmail.com",
+    aviso: ""
+  },
+  alunos: [
+    ["Manuela Ortega","",754,"PENDENTE",""],
+    ["Lucas Linhares","",754,"PENDENTE",""],
+    ["Joaquim Chila","",754,"PENDENTE",""],
+    ["Sofia Wille","",754,"PENDENTE",""],
+    ["Benício Hatchbach","",754,"PENDENTE",""],
+    ["Bento Sass","",754,"PENDENTE",""],
+    ["Renan Schwab","",754,"PENDENTE",""],
+    ["Maria Arns","",754,"PENDENTE",""],
+    ["Leonardo Guiss","",754,"PENDENTE",""],
+    ["Arthur Franco","",0,"PAGO",""],
+    ["Alice Carrilho","",0,"PAGO",""],
+    ["Bernardo Weber","",0,"PAGO",""],
+    ["Bernardo Nolla","",0,"PAGO",""],
+    ["Eduardo Kuhlmann","",0,"PAGO",""],
+    ["Henrique Avanço","",0,"PAGO",""],
+    ["Hector Schner","",0,"PAGO",""],
+    ["José Augusto Watanabe","",0,"PAGO",""],
+    ["José Zoller","",0,"PAGO",""],
+    ["Maria Olivia Kuhlmann","",0,"PAGO",""],
+    ["Maria Rita Edeling","",0,"PAGO",""],
+    ["Olivia Santo","",0,"PAGO",""]
+  ]
+};
+
+/* 3) Informações fixas da viagem (dos contratos assinados). */
+const VIAGEM = {
+  embarque: "2026-11-16T10:00:00-03:00",
+  retorno:  "2026-11-19T14:00:00-03:00",
+  slogan: "Nossa formatura. Nossa despedida.",
+  linhaDoTempo: [
+    { data: "07/04/2026", titulo: "Hotel confirmado", texto: "De acordo assinado com o Hotel Vale das Pedras: 25 pessoas, 10 apartamentos e alojamento do motorista.", tipo: "feito" },
+    { data: "04/05/2026", titulo: "Sinal do hotel pago", texto: "30% do pacote quitado por boleto para garantir a reserva.", tipo: "feito" },
+    { data: "31/08/2026", titulo: "Ônibus contratado", texto: "Contrato nº 11/2026 com a WJ Brasil Transportes: semi leito, ar, banheiro e seguro.", tipo: "feito" },
+    { data: "16/10/2026", titulo: "Saldo do hotel", texto: "Vence 30 dias antes do evento, junto com a lista final de nomes.", tipo: "proximo" },
+    { data: "09/11/2026", titulo: "Saldo do ônibus", texto: "Deve ser quitado antes da saída do veículo.", tipo: "proximo" },
+    { data: "16/11/2026", titulo: "Embarque · 10h", texto: "Na escola, Rua Santa Cecília, 100. Documento com foto obrigatório.", tipo: "viagem" },
+    { data: "19/11/2026", titulo: "Retorno · 14h", texto: "Check-out às 12h e permanência no hotel até as 14h.", tipo: "viagem" }
+  ]
+};
+</script>
+<style>
+:root{
+  --bg:#f6f3ec; --surface:#ffffff; --surface-2:#fbf9f4; --line:#e6e0d3;
+  --ink:#1c2420; --ink-2:#4a554f; --ink-3:#7d877f;
+  --green:#1b7f5a; --green-2:#146a4a; --green-soft:#e3f2ea;
+  --amber:#e0a422; --amber-soft:#fbf1d9; --amber-ink:#8a5f05;
+  --rose:#c9473c; --rose-soft:#fbe6e3;
+  --blue:#2f6fb3; --blue-soft:#e4eef9;
+  --hero-a:#0e3b2c; --hero-b:#155a42; --hero-c:#1f7d57;
+  --radius:20px; --shadow:0 1px 2px rgba(28,36,32,.05),0 12px 32px -16px rgba(28,36,32,.18);
+  --font:"Plus Jakarta Sans",system-ui,sans-serif; --display:"Fraunces",Georgia,serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--bg);color:var(--ink);line-height:1.5;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+.sr{position:absolute;left:-9999px}
+
+/* ---------- HERO ---------- */
+.hero{position:relative;overflow:hidden;color:#f4f8f5;background:linear-gradient(135deg,var(--hero-a),var(--hero-b) 55%,var(--hero-c));padding:28px 0 96px}
+.hero::before{content:"";position:absolute;inset:0;background:
+ radial-gradient(600px 300px at 85% 10%,rgba(224,164,34,.28),transparent 60%),
+ radial-gradient(500px 260px at 10% 90%,rgba(255,255,255,.10),transparent 60%);pointer-events:none}
+.hero .wrap{position:relative}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:.2px}
+.brand .mark{width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,.12);display:grid;place-items:center;font-family:var(--display);font-size:18px;border:1px solid rgba(255,255,255,.18)}
+.brand small{display:block;font-weight:500;font-size:12px;opacity:.75}
+.sync{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.16)}
+.sync .dot{width:8px;height:8px;border-radius:50%;background:var(--amber);box-shadow:0 0 0 4px rgba(224,164,34,.25)}
+.sync.ok .dot{background:#5ee3a4;box-shadow:0 0 0 4px rgba(94,227,164,.25)}
+.hero-grid{display:grid;grid-template-columns:1.3fr .9fr;gap:40px;align-items:end;margin-top:56px}
+.badges{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.badge{font-size:12px;font-weight:600;padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);backdrop-filter:blur(6px)}
+.badge.gold{background:rgba(224,164,34,.22);border-color:rgba(224,164,34,.5);color:#ffe7ad}
+h1{font-family:var(--display);font-weight:600;font-size:clamp(34px,5vw,58px);line-height:1.05;letter-spacing:-.01em}
+h1 em{font-style:italic;color:#ffd27a}
+.lead{margin-top:16px;font-size:16.5px;max-width:560px;opacity:.88}
+.countdown{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:var(--radius);padding:20px 22px;backdrop-filter:blur(8px)}
+.countdown .lbl{font-size:12px;text-transform:uppercase;letter-spacing:.12em;opacity:.7;font-weight:600}
+.cd{display:flex;gap:10px;margin-top:10px}
+.cd div{flex:1;text-align:center;background:rgba(0,0,0,.18);border-radius:14px;padding:12px 6px}
+.cd b{display:block;font-family:var(--display);font-size:32px;line-height:1}
+.cd span{font-size:11px;opacity:.7;text-transform:uppercase;letter-spacing:.08em}
+.countdown p{margin-top:12px;font-size:13px;opacity:.8}
+
+/* ---------- KPIs ---------- */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px;margin-top:-64px;position:relative;z-index:2}
+.kpi{background:var(--surface);border-radius:var(--radius);padding:22px 22px 20px;box-shadow:var(--shadow);border:1px solid var(--line);position:relative;overflow:hidden;transition:transform .2s}
+.kpi:hover{transform:translateY(-2px)}
+.kpi .t{font-size:12.5px;font-weight:600;color:var(--ink-3);text-transform:uppercase;letter-spacing:.08em;display:flex;align-items:center;gap:8px}
+.kpi .t i{width:10px;height:10px;border-radius:3px;display:inline-block}
+.kpi .v{font-family:var(--display);font-weight:600;font-size:clamp(26px,2.6vw,34px);margin-top:8px;letter-spacing:-.01em;font-variant-numeric:tabular-nums}
+.kpi .s{font-size:13px;color:var(--ink-2);margin-top:6px}
+.kpi.hero-kpi{background:linear-gradient(160deg,#fff8e6,#fff);border-color:#f2dfa8}
+.kpi.hero-kpi .v{color:var(--amber-ink)}
+.pill{display:inline-block;white-space:nowrap;font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:999px}
+.pill.g{background:var(--green-soft);color:var(--green-2)}
+.pill.a{background:var(--amber-soft);color:var(--amber-ink)}
+.pill.r{background:var(--rose-soft);color:#8f2a22}
+.pill.b{background:var(--blue-soft);color:#1f4f85}
+
+/* ---------- SECTIONS ---------- */
+section{padding:56px 0 8px}
+.sec-h{display:flex;justify-content:space-between;align-items:end;gap:20px;flex-wrap:wrap;margin-bottom:22px}
+.sec-h h2{font-family:var(--display);font-weight:600;font-size:clamp(24px,3vw,32px);letter-spacing:-.01em}
+.sec-h p{color:var(--ink-2);max-width:620px;margin-top:6px}
+.eyebrow{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--green)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:24px}
+
+/* fluxo */
+.flow{display:grid;grid-template-columns:1.15fr .85fr;gap:20px}
+.bar-track{display:flex;height:34px;border-radius:12px;overflow:hidden;background:var(--surface-2);gap:2px;margin-top:14px}
+.bar-track div{position:relative;min-width:2px;transition:width .8s cubic-bezier(.2,.8,.2,1)}
+.bar-track div:hover{filter:brightness(1.08)}
+.legend{display:flex;flex-wrap:wrap;gap:14px 22px;margin-top:14px;font-size:13.5px}
+.legend span{display:inline-flex;align-items:center;gap:8px;color:var(--ink-2)}
+.legend i{width:12px;height:12px;border-radius:4px;display:inline-block}
+.legend b{color:var(--ink);font-variant-numeric:tabular-nums}
+.math{margin-top:20px;border-top:1px dashed var(--line);padding-top:16px;display:grid;gap:8px;font-size:14.5px}
+.math div{display:flex;justify-content:space-between;gap:12px}
+.math div b{font-variant-numeric:tabular-nums}
+.math .tot{border-top:1px solid var(--line);padding-top:10px;font-weight:700;font-size:16px}
+.donut-wrap{display:flex;align-items:center;gap:22px}
+.donut{width:170px;height:170px;flex:none}
+.donut .c{font-family:var(--display);font-size:30px;font-weight:600;fill:var(--ink)}
+.donut .l{font-size:10px;fill:var(--ink-3);text-transform:uppercase;letter-spacing:.1em}
+.donut path{transition:opacity .2s}
+.donut:hover path{opacity:.55}
+.donut path:hover{opacity:1}
+.tip{position:fixed;pointer-events:none;background:var(--ink);color:#fff;font-size:12.5px;padding:8px 11px;border-radius:10px;opacity:0;transform:translate(-50%,-120%);transition:opacity .15s;z-index:50;white-space:nowrap}
+.tip b{font-variant-numeric:tabular-nums}
+
+/* timeline */
+.tl{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;position:relative;margin-top:6px}
+.tl::before{content:"";position:absolute;left:0;right:0;top:15px;height:2px;background:var(--line)}
+.tl-i{position:relative;padding-top:38px}
+.tl-i::before{content:"";position:absolute;top:8px;left:0;width:16px;height:16px;border-radius:50%;background:var(--surface);border:3px solid var(--line)}
+.tl-i.feito::before{background:var(--green);border-color:var(--green)}
+.tl-i.proximo::before{background:var(--surface);border-color:var(--amber);box-shadow:0 0 0 4px rgba(224,164,34,.25)}
+.tl-i.viagem::before{background:var(--amber);border-color:var(--amber)}
+.tl-i .d{font-size:12px;font-weight:700;color:var(--ink-3);letter-spacing:.04em}
+.tl-i .h{font-weight:700;margin-top:2px;font-size:14.5px}
+.tl-i .x{font-size:12.5px;color:var(--ink-2);margin-top:4px}
+
+/* contratos */
+.contracts{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px}
+.contract .head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+.contract .ico{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;background:var(--green-soft);color:var(--green-2)}
+.contract h3{font-size:19px;font-weight:700}
+.contract .sub{font-size:13px;color:var(--ink-3)}
+.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0 14px}
+.metrics div{background:var(--surface-2);border-radius:14px;padding:12px}
+.metrics small{display:block;font-size:11.5px;color:var(--ink-3);text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+.metrics b{display:block;font-size:clamp(14px,1.6vw,17px);margin-top:4px;font-variant-numeric:tabular-nums}
+.prog{height:10px;background:var(--surface-2);border-radius:99px;overflow:hidden}
+.prog i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--green-2),var(--green));width:0;transition:width 1s cubic-bezier(.2,.8,.2,1)}
+.prog-lbl{display:flex;justify-content:space-between;font-size:12.5px;color:var(--ink-2);margin-top:8px}
+.details{list-style:none;margin-top:16px;display:grid;gap:6px;font-size:13.5px;color:var(--ink-2)}
+.details li{display:flex;gap:8px}
+.details li::before{content:"✓";color:var(--green);font-weight:700}
+.doclink{display:inline-flex;align-items:center;gap:6px;margin-top:14px;font-size:13px;font-weight:600;color:var(--green-2);text-decoration:none;border-bottom:1px solid transparent}
+.doclink:hover{border-color:currentColor}
+
+/* famílias */
+.fam-top{display:grid;grid-template-columns:1.2fr .8fr;gap:20px;margin-bottom:20px;align-items:start}
+.big-prog{display:flex;align-items:center;gap:20px}
+.ring{width:96px;height:96px;flex:none}
+.ring .n{font-family:var(--display);font-size:26px;font-weight:600;fill:var(--ink)}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 16px}
+.chip{border:1px solid var(--line);background:var(--surface);padding:8px 14px;border-radius:999px;font-size:13px;font-weight:600;cursor:pointer;color:var(--ink-2);transition:.15s}
+.chip:hover{border-color:var(--ink-3)}
+.chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.search{flex:1;min-width:180px;border:1px solid var(--line);border-radius:999px;padding:8px 14px;font:inherit;font-size:13.5px;background:var(--surface)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.st{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px 16px;display:flex;align-items:center;gap:12px;transition:transform .15s,box-shadow .15s}
+.st:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+.st .av{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-weight:800;font-size:14px;flex:none}
+.st.pago .av{background:var(--green-soft);color:var(--green-2)}
+.st.pend .av{background:var(--amber-soft);color:var(--amber-ink)}
+.st .nm{font-weight:700;font-size:14.5px}
+.st .fm{font-size:12.5px;color:var(--ink-3)}
+.st .rt{margin-left:auto;text-align:right;display:grid;gap:4px;justify-items:end;flex:none}
+.st .val{font-size:13px;font-weight:700;font-variant-numeric:tabular-nums}
+.empty{color:var(--ink-3);padding:30px;text-align:center;grid-column:1/-1}
+.pix{background:linear-gradient(160deg,#0e3b2c,#155a42);color:#fff;border-radius:var(--radius);padding:22px}
+.pix .k{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:14px;padding:12px 14px;margin-top:12px}
+.pix code{flex:1;font-size:13px;overflow-wrap:anywhere;line-height:1.35}
+.pix .k{flex-wrap:wrap}
+.btn{border:0;background:var(--amber);color:#2b1d00;font:inherit;font-weight:700;padding:9px 14px;border-radius:10px;cursor:pointer;transition:.15s}
+.btn:hover{filter:brightness(1.06)}
+.btn.ghost{background:rgba(255,255,255,.14);color:#fff}
+.pix p{font-size:13px;opacity:.85;margin-top:10px}
+.pix-val{margin-top:16px;background:rgba(224,164,34,.16);border:1px solid rgba(224,164,34,.45);border-radius:14px;padding:14px 16px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.pix-val span{font-size:12px;text-transform:uppercase;letter-spacing:.1em;font-weight:700;color:#ffd27a;width:100%}
+.pix-val b{font-family:var(--display);font-size:34px;line-height:1;color:#fff;font-variant-numeric:tabular-nums}
+.pix-val small{font-size:13px;opacity:.8}
+
+.notice{display:none;background:var(--amber-soft);border:1px solid #f2dfa8;color:var(--amber-ink);border-radius:14px;padding:12px 16px;margin-top:20px;font-size:14px;font-weight:600}
+.notice.show{display:block}
+
+footer{margin-top:64px;padding:36px 0 40px;border-top:1px solid var(--line);color:var(--ink-2);font-size:13.5px}
+footer .wrap{display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px}
+footer b{color:var(--ink);display:block;margin-bottom:6px}
+footer small{display:block;margin-top:20px;grid-column:1/-1;color:var(--ink-3)}
+
+@keyframes up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.reveal{animation:up .6s both}
+
+@media(max-width:1000px){
+  .kpis{grid-template-columns:1fr 1fr}
+  .hero-grid,.flow,.contracts,.fam-top{grid-template-columns:1fr}
+  .tl{grid-template-columns:1fr;gap:0}
+  .tl::before{left:7px;right:auto;top:0;bottom:0;width:2px;height:auto}
+  .tl-i{padding:0 0 22px 32px}
+  .tl-i::before{top:2px}
+  footer .wrap{grid-template-columns:1fr}
+}
+@media(max-width:560px){
+  .kpis{grid-template-columns:1fr;margin-top:-56px}
+  .metrics{grid-template-columns:repeat(3,1fr);gap:6px}
+  .metrics div{padding:10px 8px}
+  .sec-h p{font-size:15px}
+  .card{padding:18px}
+  .hero-grid{margin-top:32px}
+  .lead{font-size:15px}
+  .donut-wrap{flex-direction:column;align-items:flex-start}
+  .hero{padding-bottom:84px}
+  .cd b{font-size:26px}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand">
+        <div class="mark">9º</div>
+        <div>Formatura DSC 2026<small>Deutsche Schule Curitiba · 9º ano EF</small></div>
+      </div>
+      <div class="sync" id="sync"><span class="dot"></span><span id="syncTxt">Carregando dados…</span></div>
+    </div>
+
+    <div class="hero-grid">
+      <div class="reveal">
+        <div class="badges">
+          <span class="badge gold">★ Hotel Vale das Pedras</span>
+          <span class="badge">Jaraguá do Sul · SC</span>
+          <span class="badge">16 a 19 de novembro</span>
+        </div>
+        <h1>Nossa formatura.<br><em>Nossa despedida.</em></h1>
+        <p class="lead">Aqui a turma e as famílias acompanham, com total transparência, tudo o que já foi contratado e pago para a viagem, o que ainda falta e quanto vai sobrar para a festa.</p>
+      </div>
+      <div class="countdown reveal" style="animation-delay:.15s">
+        <div class="lbl">Faltam para o embarque</div>
+        <div class="cd" id="cd">
+          <div><b>—</b><span>dias</span></div><div><b>—</b><span>horas</span></div><div><b>—</b><span>min</span></div>
+        </div>
+        <p>Saída segunda 16/11 às 10h da escola · Volta quinta 19/11 às 14h</p>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <div class="kpis" id="kpis">
+    <div class="kpi reveal"><div class="t"><i style="background:var(--green)"></i>Saldo em conta</div><div class="v" id="kSaldo">—</div><div class="s" id="kSaldoS">conferido em —</div></div>
+    <div class="kpi reveal" style="animation-delay:.05s"><div class="t"><i style="background:var(--amber)"></i>A receber das famílias</div><div class="v" id="kReceber">—</div><div class="s" id="kReceberS">—</div></div>
+    <div class="kpi reveal" style="animation-delay:.1s"><div class="t"><i style="background:var(--rose)"></i>Falta pagar (hotel + ônibus)</div><div class="v" id="kPagar">—</div><div class="s" id="kPagarS">—</div></div>
+    <div class="kpi hero-kpi reveal" style="animation-delay:.15s"><div class="t"><i style="background:var(--amber-ink)"></i>Sobra prevista para a festa</div><div class="v" id="kSobra">—</div><div class="s" id="kSobraS">—</div></div>
+  </div>
+  <div class="notice" id="aviso"></div>
+
+  <!-- FLUXO -->
+  <section id="fluxo">
+    <div class="sec-h">
+      <div><div class="eyebrow">O caixa</div><h2>De onde vem e para onde vai</h2><p>Tudo o que a turma tem (em conta e ainda a receber) comparado com o que ainda precisa ser pago aos fornecedores.</p></div>
+    </div>
+    <div class="flow">
+      <div class="card">
+        <strong>Recursos da turma</strong>
+        <div class="bar-track" id="barRec"></div>
+        <strong style="display:block;margin-top:18px">Compromissos</strong>
+        <div class="bar-track" id="barCom"></div>
+        <div class="legend" id="legend"></div>
+        <div class="math" id="math"></div>
+      </div>
+      <div class="card">
+        <strong>Cobertura dos compromissos</strong>
+        <p style="font-size:13.5px;color:var(--ink-2);margin:4px 0 14px">Quanto do que falta pagar já está garantido só com o dinheiro em conta.</p>
+        <div class="donut-wrap">
+          <svg class="donut" viewBox="0 0 120 120" id="donut"></svg>
+          <div id="donutTxt" style="font-size:14px;color:var(--ink-2)"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LINHA DO TEMPO -->
+  <section id="tempo">
+    <div class="sec-h"><div><div class="eyebrow">Passo a passo</div><h2>O que já foi feito e o que vem por aí</h2></div></div>
+    <div class="card"><div class="tl" id="tl"></div></div>
+  </section>
+
+  <!-- CONTRATOS -->
+  <section id="contratos">
+    <div class="sec-h"><div><div class="eyebrow">Assinado e garantido</div><h2>Os dois contratos da viagem</h2><p>Ambos assinados eletronicamente e com 30% de entrada já pagos. O restante vence perto da viagem.</p></div></div>
+    <div class="contracts">
+      <div class="card contract" id="cHotel"></div>
+      <div class="card contract" id="cBus"></div>
+    </div>
+  </section>
+
+  <!-- FAMÍLIAS -->
+  <section id="familias">
+    <div class="sec-h"><div><div class="eyebrow">Quem já está em dia</div><h2>Pagamentos das famílias</h2><p>Segunda parcela de R$ 754,00 por aluno. Quem ainda não pagou pode usar a chave PIX ao lado.</p></div></div>
+    <div class="fam-top">
+      <div class="card">
+        <div class="big-prog">
+          <svg class="ring" viewBox="0 0 100 100" id="ring"></svg>
+          <div><div style="font-family:var(--display);font-size:24px;font-weight:600" id="famH">—</div><div style="color:var(--ink-2);font-size:14px" id="famS">—</div></div>
+        </div>
+        <div class="chips" style="margin-top:18px" id="chips">
+          <button class="chip on" data-f="todos">Todos</button>
+          <button class="chip" data-f="pend">Pendentes</button>
+          <button class="chip" data-f="pago">Pagos</button>
+          <input class="search" id="q" placeholder="Buscar aluno ou família…">
+        </div>
+        <div class="grid" id="alunos"></div>
+      </div>
+      <div class="pix">
+        <div class="eyebrow" style="color:#ffd27a">Chave PIX oficial da comissão</div>
+        <h3 style="font-size:20px;margin-top:4px">Pague a 2ª parcela</h3>
+        <div class="k"><code id="pixKey">—</code><button class="btn" id="copyPix">Copiar</button></div>
+        <p>Depois de pagar, mande o comprovante para a comissão no grupo do WhatsApp. O status aqui é atualizado pela comissão na planilha oficial.</p>
+        <div class="pix-val"><span>Valor da 2ª parcela</span><b id="pixVal">R$ 754,00</b><small>por aluno</small></div>
+      </div>
+    </div>
+  </section>
+
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div><b>Comissão de formatura</b>Turma do 9º ano EF 2026<br>Deutsche Schule Curitiba</div>
+    <div><b>Hotel Vale das Pedras</b>Estrada das Pedras, s/n · Ribeirão Grande do Norte<br>Jaraguá do Sul · SC · pensão completa</div>
+    <div><b>Transporte</b>WJ Brasil Transportes · ônibus semi leito 42/46 lugares<br>Embarque na escola, Rua Santa Cecília, 100</div>
+    <small id="foot">Os números desta página vêm da planilha oficial da comissão e são atualizados automaticamente.</small>
+  </div>
+</footer>
+
+<div class="tip" id="tip"></div>
+
+<script>
+/* ===================== utilidades ===================== */
+const BRL = v => new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(v||0);
+const $ = s => document.querySelector(s);
+const num = v => { if(typeof v==='number') return v; if(v==null) return 0;
+  let s=String(v).trim().replace(/R\$\s?/,'').replace(/\s/g,'');
+  if(s.includes(',')) s=s.replace(/\./g,'').replace(',','.');
+  else if(/^\d{1,3}(\.\d{3})+$/.test(s)) s=s.replace(/\./g,'');
+  const n=parseFloat(s); return isNaN(n)?0:n; };
+const initials = n => n.split(/\s+/).filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase();
+
+function parseCSV(text){
+  const rows=[];let row=[],cur='',q=false;
+  for(let i=0;i<text.length;i++){const c=text[i];
+    if(q){ if(c==='"'){ if(text[i+1]==='"'){cur+='"';i++;} else q=false; } else cur+=c; }
+    else if(c==='"') q=true;
+    else if(c===','){row.push(cur);cur='';}
+    else if(c==='\n'){row.push(cur);rows.push(row);row=[];cur='';}
+    else if(c!=='\r') cur+=c;
+  }
+  if(cur!==''||row.length){row.push(cur);rows.push(row);}
+  return rows.filter(r=>r.some(x=>x.trim()!==''));
+}
+async function fetchCSV(url){
+  const r=await fetch(url+(url.includes('?')?'&':'?')+'_t='+Date.now(),{cache:'no-store'});
+  if(!r.ok) throw new Error(r.status); return parseCSV(await r.text());
+}
+function norm(s){return String(s||'').trim().toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');}
+
+/* ===================== carregar dados ===================== */
+async function carregar(){
+  let caixa={...DADOS_LOCAIS.caixa}, alunos=DADOS_LOCAIS.alunos.map(a=>({nome:a[0],familia:a[1],valor:num(a[2]),pago:norm(a[3]).startsWith('pag'),data:a[4]||''}));
+  let origem='local';
+  try{
+    if(PLANILHA.caixa){
+      const rows=await fetchCSV(PLANILHA.caixa);
+      rows.forEach(r=>{const k=norm(r[0]).replace(/\s+/g,'_'); if(!k||k==='chave') return; const v=r[1];
+        if(['saldo_conta','hotel_total','hotel_pago','onibus_total','onibus_pago','meta_festa'].includes(k)) caixa[k]=num(v); else if(k) caixa[k]=(v||'').trim();});
+      origem='planilha';
+    }
+    if(PLANILHA.alunos){
+      const rows=await fetchCSV(PLANILHA.alunos);
+      const h=rows[0].map(norm); const iN=h.findIndex(x=>x.startsWith('aluno')), iF=h.findIndex(x=>x.startsWith('fam')), iV=h.findIndex(x=>x.startsWith('valor')), iS=h.findIndex(x=>x.startsWith('situa')||x.startsWith('status')||x.startsWith('pago')), iD=h.findIndex(x=>x.startsWith('data'));
+      const list=rows.slice(1).filter(r=>(r[iN]||'').trim()).map(r=>({nome:r[iN].trim(),familia:(r[iF]||'').trim(),valor:num(r[iV]),pago:/^(pago|sim|ok|x|true|1)/.test(norm(r[iS])),data:(r[iD]||'').trim()}));
+      if(list.length) alunos=list; origem='planilha';
+    }
+  }catch(e){ console.warn('Falha ao ler planilha, usando dados locais.',e); origem=PLANILHA.caixa||PLANILHA.alunos?'erro':'local'; }
+  render(caixa,alunos,origem);
+}
+
+/* ===================== render ===================== */
+let tipEl=$('#tip');
+function tipOn(el,html){ el.addEventListener('mousemove',e=>{tipEl.innerHTML=html;tipEl.style.left=e.clientX+'px';tipEl.style.top=e.clientY+'px';tipEl.style.opacity=1;}); el.addEventListener('mouseleave',()=>tipEl.style.opacity=0); }
+
+function arc(cx,cy,r,a0,a1){const p=a=>[cx+r*Math.cos(a),cy+r*Math.sin(a)];const [x0,y0]=p(a0),[x1,y1]=p(a1);const big=a1-a0>Math.PI?1:0;return `M${x0} ${y0}A${r} ${r} 0 ${big} 1 ${x1} ${y1}`;}
+
+function render(c,alunos,origem){
+  const pend=alunos.filter(a=>!a.pago), pagos=alunos.filter(a=>a.pago);
+  const aReceber=pend.reduce((s,a)=>s+a.valor,0);
+  const hotelPend=c.hotel_total-c.hotel_pago, busPend=c.onibus_total-c.onibus_pago, faltaPagar=hotelPend+busPend;
+  const recursos=c.saldo_conta+aReceber;
+  const sobra=recursos-faltaPagar, sobraHoje=c.saldo_conta-faltaPagar;
+  const cobertura=faltaPagar>0?c.saldo_conta/faltaPagar*100:100;
+
+  // sync
+  const sy=$('#sync'); sy.classList.toggle('ok',origem==='planilha');
+  $('#syncTxt').textContent=origem==='planilha'?`Sincronizado com a planilha · saldo de ${c.saldo_atualizado_em||'—'}`:origem==='erro'?'Planilha indisponível · mostrando última versão':`Dados de ${c.saldo_atualizado_em||'—'}`;
+
+  // aviso
+  if(c.aviso){$('#aviso').textContent=c.aviso;$('#aviso').classList.add('show');}
+
+  // KPIs
+  $('#kSaldo').textContent=BRL(c.saldo_conta); $('#kSaldoS').textContent=`conferido em ${c.saldo_atualizado_em||'—'}`;
+  $('#kReceber').textContent=BRL(aReceber); $('#kReceberS').innerHTML=`<span class="pill a">${pend.length} ${pend.length===1?'família':'famílias'}</span> ainda com 2ª parcela`;
+  $('#kPagar').textContent=BRL(faltaPagar); $('#kPagarS').innerHTML=`hotel ${BRL(hotelPend)} · ônibus ${BRL(busPend)}`;
+  $('#kSobra').textContent=BRL(sobra); $('#kSobraS').innerHTML=sobra>=0?`<span class="pill g">superávit</span> se todas as famílias pagarem`:`<span class="pill r">déficit</span> mesmo com todas pagando`;
+
+  // barras
+  const maxW=Math.max(recursos,faltaPagar);
+  const seg=(v,col,lbl)=>{const d=document.createElement('div');d.style.width=(v/maxW*100)+'%';d.style.background=col;tipOn(d,`${lbl}<br><b>${BRL(v)}</b>`);return d;};
+  const bR=$('#barRec'); bR.append(seg(c.saldo_conta,'var(--green)','Saldo em conta'),seg(aReceber,'var(--amber)','A receber das famílias'));
+  const bC=$('#barCom'); bC.append(seg(hotelPend,'var(--rose)','Saldo do hotel'),seg(busPend,'var(--blue)','Saldo do ônibus'));
+  if(sobra>0){const s=seg(sobra,'transparent','Sobra');s.style.outline='2px dashed var(--amber-ink)';s.style.outlineOffset='-2px';s.style.borderRadius='8px';bC.append(s);}
+  $('#legend').innerHTML=`<span><i style="background:var(--green)"></i>Em conta <b>${BRL(c.saldo_conta)}</b></span><span><i style="background:var(--amber)"></i>A receber <b>${BRL(aReceber)}</b></span><span><i style="background:var(--rose)"></i>Hotel <b>${BRL(hotelPend)}</b></span><span><i style="background:var(--blue)"></i>Ônibus <b>${BRL(busPend)}</b></span><span><i style="border:2px dashed var(--amber-ink);width:10px;height:10px"></i>Sobra <b>${BRL(Math.max(sobra,0))}</b></span>`;
+  $('#math').innerHTML=`<div><span>Saldo em conta hoje</span><b>${BRL(c.saldo_conta)}</b></div><div><span>+ 2ª parcela de ${pend.length} famílias</span><b>${BRL(aReceber)}</b></div><div><span>− Saldo do hotel (vence ${c.hotel_vencimento||'—'})</span><b>${BRL(hotelPend)}</b></div><div><span>− Saldo do ônibus (vence ${c.onibus_vencimento||'—'})</span><b>${BRL(busPend)}</b></div><div class="tot"><span>= Sobra para a festa</span><b style="color:${sobra>=0?'var(--green-2)':'var(--rose)'}">${BRL(sobra)}</b></div>`;
+
+  // donut
+  const d=$('#donut'); const pct=Math.min(cobertura,100); const a0=-Math.PI/2, a1=a0+2*Math.PI*pct/100-0.0001;
+  d.innerHTML=`<circle cx="60" cy="60" r="46" fill="none" stroke="var(--surface-2)" stroke-width="14"/><path d="${arc(60,60,46,a0,a1)}" fill="none" stroke="var(--green)" stroke-width="14" stroke-linecap="round" id="dArc"/><text x="60" y="58" text-anchor="middle" class="c">${cobertura.toFixed(0)}%</text><text x="60" y="74" text-anchor="middle" class="l">coberto</text>`;
+  tipOn(d.querySelector('#dArc'),`Em conta: <b>${BRL(c.saldo_conta)}</b> de ${BRL(faltaPagar)}`);
+  $('#donutTxt').innerHTML=sobraHoje>=0?`Só com o que já está em conta a turma quita os dois contratos e ainda ficam <b>${BRL(sobraHoje)}</b>. Cada 2ª parcela que entra vai direto para a festa.`:`Faltam <b>${BRL(-sobraHoje)}</b> para cobrir os contratos só com o que está em conta. As ${pend.length} parcelas pendentes fecham essa conta e o que passar vira festa.`;
+
+  // timeline
+  $('#tl').innerHTML=VIAGEM.linhaDoTempo.map(i=>`<div class="tl-i ${i.tipo}"><div class="d">${i.data}</div><div class="h">${i.titulo}</div><div class="x">${i.texto}</div></div>`).join('');
+
+  // contratos
+  const contrato=(el,ico,titulo,sub,tot,pago,venc,itens)=>{const p=pago/tot*100;el.innerHTML=`<div class="head"><div style="display:flex;gap:14px;align-items:center"><div class="ico">${ico}</div><div><h3>${titulo}</h3><div class="sub">${sub}</div></div></div><span class="pill ${p>=100?'g':'a'}">${p>=100?'100% quitado':p.toFixed(0)+'% pago'}</span></div><div class="metrics"><div><small>Valor total</small><b>${BRL(tot)}</b></div><div><small>Já pago</small><b style="color:var(--green-2)">${BRL(pago)}</b></div><div><small>Falta</small><b style="color:${tot-pago>0?'var(--rose)':'var(--green-2)'}">${BRL(tot-pago)}</b></div></div><div class="prog"><i data-w="${p}"></i></div><div class="prog-lbl"><span>Entrada paga</span><span>Saldo vence em <b>${venc||'—'}</b></span></div><ul class="details">${itens.map(x=>`<li>${x}</li>`).join('')}</ul>`;};
+  contrato($('#cHotel'),'🏨','Hotel Vale das Pedras','Hospedagem com pensão completa · Jaraguá do Sul',c.hotel_total,c.hotel_pago,c.hotel_vencimento,['3 diárias, 16 a 19/11, 10 apartamentos + alojamento do motorista','Café, almoço, lanche e jantar com suco, água e refrigerante','Piscina, lago com pedalinhos, cavalos, trilhas, quadras e sala de jogos','Recreação programada para o grupo','Acordo assinado eletronicamente em 07/04/2026']);
+  contrato($('#cBus'),'🚌','Ônibus fretado','WJ Brasil Transportes · contrato nº 11/2026',c.onibus_total,c.onibus_pago,c.onibus_vencimento,['Semi leito 42/46 lugares, ar-condicionado, banheiro e TV','Seguro de passageiros conforme ANTT','Saída 16/11 às 10h da escola e retorno 19/11 às 14h','Lista de passageiros com documento entregue 48h antes','Contrato assinado eletronicamente em 31/08/2026']);
+  requestAnimationFrame(()=>document.querySelectorAll('.prog i[data-w]').forEach(i=>i.style.width=i.dataset.w+'%'));
+
+  // famílias
+  const n=alunos.length, np=pagos.length, pf=n?np/n:0;
+  $('#ring').innerHTML=`<circle cx="50" cy="50" r="40" fill="none" stroke="var(--surface-2)" stroke-width="10"/><path d="${arc(50,50,40,-Math.PI/2,-Math.PI/2+2*Math.PI*Math.max(pf,0.001)-0.0001)}" fill="none" stroke="var(--green)" stroke-width="10" stroke-linecap="round"/><text x="50" y="56" text-anchor="middle" class="n">${np}/${n}</text>`;
+  $('#famH').textContent=`${np} de ${n} famílias em dia`;
+  $('#famS').textContent=pend.length?`${pend.length} ainda ${pend.length===1?'precisa':'precisam'} pagar a 2ª parcela (${BRL(aReceber)} no total)`:'Todas as famílias quitaram. Obrigado!';
+  $('#pixKey').textContent=c.chave_pix||'—'; if(pend[0]) $('#pixVal').textContent=BRL(pend[0].valor);
+
+  let filtro='todos', q='';
+  const lista=()=>{ const g=$('#alunos'); const sel=alunos.filter(a=>(filtro==='todos'||(filtro==='pago'&&a.pago)||(filtro==='pend'&&!a.pago))&&(!q||norm(a.nome+' '+a.familia).includes(norm(q)))).sort((a,b)=>a.pago-b.pago||a.nome.localeCompare(b.nome,'pt'));
+    g.innerHTML=sel.length?sel.map((a,i)=>`<div class="st ${a.pago?'pago':'pend'} reveal" style="animation-delay:${i*25}ms"><div class="av">${initials(a.nome)}</div><div><div class="nm">${a.nome}</div>${a.familia?`<div class="fm">${a.familia}</div>`:``}</div><div class="rt"><span class="pill ${a.pago?'g':'a'}">${a.pago?'Pago':'Pendente'}</span>${!a.pago&&a.valor?`<div class="val">${BRL(a.valor)}</div>`:a.data?`<div class="fm">${a.data}</div>`:''}</div></div>`).join(''):`<div class="empty">Ninguém encontrado.</div>`; };
+  lista();
+  $('#chips').addEventListener('click',e=>{const b=e.target.closest('.chip');if(!b)return;document.querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));b.classList.add('on');filtro=b.dataset.f;lista();});
+  $('#q').addEventListener('input',e=>{q=e.target.value;lista();});
+
+  // pix copy
+  $('#copyPix').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(c.chave_pix);$('#copyPix').textContent='Copiado ✓';setTimeout(()=>$('#copyPix').textContent='Copiar',1800);}catch(e){}});
+  $('#foot').textContent=origem==='planilha'?'Os números desta página vêm da planilha oficial da comissão e são atualizados automaticamente ao recarregar.':'Os números desta página são mantidos pela comissão de formatura.';
+}
+
+/* countdown */
+function cd(){const t=new Date(VIAGEM.embarque)-Date.now();const el=$('#cd').querySelectorAll('b');if(t<=0){el[0].textContent='🎉';el[1].textContent='';el[2].textContent='';return;}el[0].textContent=Math.floor(t/864e5);el[1].textContent=Math.floor(t%864e5/36e5);el[2].textContent=Math.floor(t%36e5/6e4);}
+cd(); setInterval(cd,30000);
+carregar();
+</script>
+</body>
+</html>
